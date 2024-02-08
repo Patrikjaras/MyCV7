@@ -1,0 +1,450 @@
+﻿@page "/"
+@using ClassLibrary1.Models;
+@using ClassLibrary1.Data;
+
+
+<PageTitle>Home</PageTitle>
+
+@foreach(var name in AboutList)
+{
+    <h1 style="color: red">@name.Name</h1>
+}
+@foreach (var info in ContactInfoList)
+{
+    <h1 style="color: red">@info.Email @info.Phone</h1>
+}
+
+<AuthorizeView>
+    <NotAuthorized Context="fislk">
+    </NotAuthorized>
+    <Authorized Context="authcontext"></Authorized>
+</AuthorizeView>
+
+
+<div>
+    <button @onclick="ToggleEditContactSection" class="btn btn-primary" style="margin: 10px">Toggle Edit About Section</button>
+
+</div>
+
+@if (showEditContactSection)
+{
+<EditForm Model="newContact" OnValidSubmit="@AddNewContact" class="edit-form" formname="contactinfo">
+
+    <h1>Add New Contact Info</h1>
+    <div>
+        <label for="newcontact.email">Contact Name</label>
+        <InputText id="newcontact.email" @bind-Value="newContact.Email"></InputText>
+        <label for="newcontact.phone">Contact Phone</label>
+        <InputText id="newcontact.phone" @bind-Value="newContact.Phone"></InputText>
+    </div>
+    <div>
+        <button type="submit">Add New ContactInfo</button>
+    </div>
+</EditForm>
+
+<EditForm Model="RemoveContact" OnValidSubmit="@DeleteContact" class="edit-form">
+    <h1>Remove Contact Info</h1>
+    <div>
+        <label>Choose contact to delete</label>
+        <select @bind="selectedContactToRemoveID">
+            <option>Select Contact</option>
+            @foreach(var contact in ContactInfoList)
+            {
+                    <option value="@contact.Id">Email: @contact.Email Phone: @contact.Phone</option>
+            }
+        </select>
+    </div>
+    <div>
+        <button type="submit">Press to delete Contact info.</button>
+    </div>
+</EditForm>
+
+<EditForm Model="ContactToEdit" OnValidSubmit="@EditContactFunction" class="edit-form">
+    <div>
+        <h1>Edit ContactInfo</h1>
+        <label>Edit</label>
+        <select value="@selectedContactIDToEdit" @onchange="UpdateSelectedContact">
+            <option value=""></option>
+            @foreach (var contact in ContactInfoList)
+            {
+                    <option value="@contact.Id">Email: @contact.Email Phone: @contact.Phone</option>
+            }          
+        </select>
+        <label>Email</label>
+        <InputText @bind-Value="ContactToEdit.Email">@ContactToEdit.Email</InputText>
+        <label>Phonenumber</label>
+        <InputText @bind-Value="ContactToEdit.Phone">@ContactToEdit.Phone</InputText>
+    </div>
+    <div>
+        <button type="submit">Edit contact info</button>
+    </div>
+</EditForm>
+
+    }
+
+<div>
+    <button @onclick="ToggleEditAboutSection" class="btn btn-primary" style="margin: 10px">Toggle Edit About Section</button>
+
+</div>
+@if (showEditAboutSection)
+{
+    <EditForm Model="AboutInfo" OnValidSubmit="@AddAbout" class="edit-form" FormName="aboutinfo">
+
+        <h1>Add About</h1>
+        <div>
+            <label for="aboutinfo.name">Name</label>
+            <InputText id="aboutinfo.name" @bind-Value="AboutInfo.Name"></InputText>
+            <label for="aboutinfo.des">Description</label>
+            <InputText if="aboutinfo.des" @bind-Value="AboutInfo.Description"></InputText>
+
+
+        </div>
+        <div>
+            <button type="submit">add about</button>
+        </div>
+
+    </EditForm>
+    <EditForm Model="RemoveAbout" OnValidSubmit="@DeleteAbout" class="edit-form">
+        <div>
+            <label> Choose About</label>
+            <select @bind="selectedAboutIdToRemove">
+                <option>Select About</option>
+                @foreach (var about in AboutList)
+                {
+                    <option value="@about.Id">@about.Name </option>
+                }
+            </select>
+        </div>
+        <div>
+            <button type="submit"> About to delete</button>
+        </div>
+
+    </EditForm>
+
+    <EditForm Model="EditAbout" OnValidSubmit="@EditAboutFunction" class="edit-form">
+        <div>
+            <label>Update</label>
+            <select value="@selectedAboutId" @onchange="UpdateSelectedAbout">
+                <option value=""></option>
+                @foreach (var about in AboutList)
+                {
+                    <option value="@about.Id">@about.Name</option>
+
+                }               
+            </select>
+
+            <label>Name</label>
+            <InputText @bind-Value="EditAbout.Name">@EditAbout.Name</InputText>
+                <label>Desctiption</label>
+                <InputText @bind-Value="EditAbout.Description"></InputText>
+            </div>
+            <div>
+                <button type="submit">Edit About</button>
+            </div>
+
+        </EditForm>
+}
+
+
+
+
+   
+
+<section style="background-color: black; height: 100vh;" class="col-lg-12 col-sm-3 col-md-6 d-flex justify-content-center text-center">
+    <h1 style="color: red; margin-top: 20px">Hello, world!</h1>
+
+    
+    <AuthorizeView Roles="Admin">
+        <h1 style="color: red"> hello you are admin</h1>
+        <div>
+            
+        </div>
+</AuthorizeView>
+</section>
+
+<section style="background-color: gray; height: 100vh;">
+    <h1 style="color: red">Hello, world!</h1>
+</section>
+
+
+@code {
+    //About
+    private About EditAbout { get; set; } = new About();
+    private About AboutInfo { get; set; } = new About();
+    private About RemoveAbout { get; set; } = new About();
+    private List<About> AboutList { get; set; } = new List<About>();
+    private string selectedAboutId;
+    private string selectedAboutIdToRemove;
+    private About selectedAbout { get; set; } = new About();
+
+    //Contact
+    private Contact newContact { get; set; } = new Contact();
+    private List<Contact> ContactInfoList { get; set; } = new List<Contact>();
+    private Contact RemoveContact { get; set; } = new Contact();
+    private Contact ContactToEdit { get; set; } = new Contact();
+    private string selectedContactToRemoveID;
+    private string selectedContactIDToEdit;
+
+
+    //Helpers
+    private HttpClient httpClient = new HttpClient();
+    private bool showEditAboutSection = false;
+    private bool showEditContactSection = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAboutInfo();
+        await GetContactInfo();
+    }
+    //Show different CRUD sections
+    private void ToggleEditContactSection()
+    {
+        showEditContactSection = !showEditContactSection;
+    }
+    private void ToggleEditAboutSection()
+    {
+        showEditAboutSection = !showEditAboutSection;
+    }
+    //Contact functions
+    private async Task GetContactInfo()
+    {
+        try
+        {
+            var response = await httpClient.GetAsync("http://localhost:5177/contact");
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Sucess");
+                ContactInfoList = await response.Content.ReadFromJsonAsync<List<Contact>>();
+
+                StateHasChanged();
+            }
+        }
+        catch (Exception)
+        {
+
+        }
+    }
+    private async Task AddNewContact()
+    {
+        try
+        {
+            if (newContact != null)
+            {
+                var response = await httpClient.PostAsJsonAsync("http://localhost:5177/contact", newContact);
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Sucess");
+                    newContact = new Contact();
+                    GetContactInfo();
+                }
+            }
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("Something went wrong");
+        }
+    }
+    private async Task DeleteContact()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(selectedContactToRemoveID))
+            {
+                Console.WriteLine("no contact selected");
+                return;
+            }
+            var response = await httpClient.DeleteAsync($"http://localhost:5177/contact/{selectedContactToRemoveID}");
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Sucess item with ID: {selectedContactToRemoveID}");
+                selectedContactToRemoveID = "";
+                await GetContactInfo();
+            }
+        }
+        catch (Exception)
+        {
+
+        }
+    }
+    private async Task EditContactFunction()
+    {
+        try
+        {
+            var response = await httpClient.PutAsJsonAsync($"http://localhost:5177/contact/{ContactToEdit.Id}", ContactToEdit);
+            if (response.IsSuccessStatusCode) ;
+            {
+                Console.WriteLine("Sucess");
+                ContactToEdit = new Contact();
+                await GetContactInfo();
+            }
+        }
+        catch (Exception)
+        {
+
+        }
+    }
+    private async Task UpdateSelectedContact(ChangeEventArgs e)
+    {
+        selectedContactIDToEdit = e.Value.ToString();
+        ContactToEdit = ContactInfoList.FirstOrDefault(x => x.Id == selectedContactIDToEdit);
+
+        if (string.IsNullOrEmpty(selectedContactIDToEdit))
+        {
+            var slectedContact = ContactInfoList.FirstOrDefault(x => x.Id == selectedContactIDToEdit);
+            if (slectedContact != null)
+            {
+                ContactToEdit = new Contact
+                {
+                    Email = slectedContact.Email,
+                    Phone = slectedContact.Phone
+
+                };
+                await GetContactInfo();
+            }
+
+        }
+
+        
+    }
+
+    //About functions
+    private void OnAboutSelected(ChangeEventArgs x)
+    {
+        selectedAboutId = x.Value.ToString();
+        EditAbout = AboutList.FirstOrDefault(x => x.Id == selectedAboutId);
+
+    }
+    private async Task GetAboutInfo()
+    {
+        try
+        {
+            var response = await httpClient.GetAsync("http://localhost:5177/about");
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("sucess");
+                AboutList = await response.Content.ReadFromJsonAsync<List<About>>();
+                StateHasChanged();
+            }
+            else
+            {
+
+            }
+        }
+        catch(Exception)
+        {
+
+        }
+    }
+    private async Task AddAbout()
+    {
+        try
+        {
+
+            if (AboutInfo.Name != null)
+            {
+                var response = await httpClient.PostAsJsonAsync("http://localhost:5177/about", AboutInfo);
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Success");
+                    AboutInfo = new About();
+                    GetAboutInfo();
+                }
+                else
+                {
+                    Console.WriteLine("Failed");
+                }
+            }
+            else
+            {
+
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Something went wrong");
+            // Handle exception
+        }
+    }
+    private async Task DeleteAbout()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(selectedAboutIdToRemove))
+            {
+                Console.WriteLine("No about selected");
+                return;
+            }
+            var response = await httpClient.DeleteAsync($"http://localhost:5177/about/{selectedAboutIdToRemove}");
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Sucess item with ID:{selectedAboutId} was deleted");
+                selectedAboutId = "";
+                GetAboutInfo();
+
+                return;
+            }
+            else
+            {
+                Console.WriteLine("failed");
+                return;
+            }
+        }
+        catch (Exception)
+        {
+
+        }
+    }
+    private async Task EditAboutFunction()
+    {
+        try
+        {
+            var response = await httpClient.PutAsJsonAsync($"http://localhost:5177/about/{EditAbout.Id}", EditAbout);
+
+
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Sucess");
+                EditAbout = new About();
+                await GetAboutInfo();
+
+
+            }
+            else
+            {
+                Console.WriteLine("Something went wrong");
+            }
+
+
+        }
+        catch (Exception)
+        {
+
+        }
+    }
+    private async Task UpdateSelectedAbout(ChangeEventArgs e)
+    {
+        //string selectedAboutid2 = e.Value?.ToString();
+        selectedAboutId = e.Value.ToString();
+        EditAbout = AboutList.FirstOrDefault(x => x.Id == selectedAboutId);
+
+        if (string.IsNullOrEmpty(selectedAboutId))
+        {
+            var selectedAbout = AboutList.FirstOrDefault(x => x.Id == selectedAboutId);
+            if (selectedAbout != null)
+            {
+                EditAbout = new About
+                {
+                    Name = selectedAbout.Name,
+                    Description = selectedAbout.Description
+
+                };
+            }
+
+            
+        }
+
+    }
+
+    
+}
