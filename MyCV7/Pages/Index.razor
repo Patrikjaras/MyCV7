@@ -32,7 +32,7 @@
 </section>
 
 @*Project section*@
-<sectiub>
+<section>
     <h1>Projects</h1>
     <div class="container mt-1">
         <div class="row justify-content-center">
@@ -74,7 +74,7 @@
             </div>
         </div>
     </div>
-</sectiub>
+</section>
 
 @* Education section *@
 <section class="vh-auto">
@@ -203,7 +203,7 @@
         <div class="row align-items-start row-cols-1 row-cols-md-2 row-cols-lg-4 d-flex justify-content-center ">
             @foreach (var skill in SkillsList)
             {
-                <div class="col col-6 col-md-6 col-lg-3 mb-6 mt-1" style="">
+                <div class="col col-6 col-md-6 col-lg-3 mb-6 mt-1 mb-2">
                     <div class="card" style="border-radius: 10px; height: auto; overflow:hidden; width:auto;">
                         <img src="@skill.imagePath" class="card-img-top" alt="Description of the image" style="max-height: auto; object-fit: cover">
                         <hr />
@@ -224,8 +224,8 @@
 </section>
 
 @*Footer*@
-<div class="blockcode">
-    <div class="header">Footer</div>
+<div class="blockcode mt-2">
+    <div class="header"></div>
 
     <footer class="page-footer shadow">
         <div class="d-flex flex-column mx-auto py-5" style="width: 80%">
@@ -286,6 +286,7 @@
 
 
 <AuthorizeView Context="inloggad">
+<div class="container border-1 vh-auto">
 
 <h1>Add / edit sections</h1>
 
@@ -295,7 +296,6 @@
 
 
 @*Öppningstagg för CRUD*@
-<div>
 
 @* Project section *@
 @if (showProjectSection)
@@ -893,14 +893,14 @@
     {
         try
         {
-            AboutList = await httpClient.GetFromJsonAsync<List<About>>("http://localhost:5177/about");
-            ContactInfoList = await httpClient.GetFromJsonAsync<List<Contact>>("http://localhost:5177/contact");
-            EducationList = await httpClient.GetFromJsonAsync<List<Education>>("http://localhost:5177/education");
-            QualificationsList = await httpClient.GetFromJsonAsync<List<Qualifications>>("http://localhost:5177/qualifications");
-            SkillsList = await httpClient.GetFromJsonAsync<List<Skills>>("http://localhost:5177/skills");
-            workExperienceList = await httpClient.GetFromJsonAsync<List<WorkExperience>>("http://localhost:5177/workexperience");
+            AboutList = await httpClient.GetFromJsonAsync<List<About>>("https://patrikapiinl3.azurewebsites.net/about");
+            ContactInfoList = await httpClient.GetFromJsonAsync<List<Contact>>("https://patrikapiinl3.azurewebsites.net/contact");
+            EducationList = await httpClient.GetFromJsonAsync<List<Education>>("https://patrikapiinl3.azurewebsites.net/education");
+            QualificationsList = await httpClient.GetFromJsonAsync<List<Qualifications>>("https://patrikapiinl3.azurewebsites.net/qualifications");
+            SkillsList = await httpClient.GetFromJsonAsync<List<Skills>>("https://patrikapiinl3.azurewebsites.net/skills");
+            workExperienceList = await httpClient.GetFromJsonAsync<List<WorkExperience>>("https://patrikapiinl3.azurewebsites.net/workexperience");
             APIJoke = await httpClient.GetFromJsonAsync<JokeAPI>("https://official-joke-api.appspot.com/random_joke");
-            ProjectList = await httpClient.GetFromJsonAsync<List<Projects>>("http://localhost:5177/project");
+            ProjectList = await httpClient.GetFromJsonAsync<List<Projects>>("https://patrikapiinl3.azurewebsites.net/project");
             // await GetAboutInfo();
             // await GetContactInfo();
             // await GetEducationInfo();
@@ -970,7 +970,7 @@
     {
         try
         {
-            var response = await httpClient.GetAsync("http://localhost:5177/workexperience");
+            var response = await httpClient.GetAsync("https://patrikapiinl3.azurewebsites.net/workexperience");
             if (response.IsSuccessStatusCode)
             {
                 workExperienceList = await response.Content.ReadFromJsonAsync<List<WorkExperience>>();
@@ -988,7 +988,7 @@
         {
             if (newWorkExperience != null)
             {
-                var response = await httpClient.PostAsJsonAsync($"http://localhost:5177/workexperience", newWorkExperience);
+                var response = await httpClient.PostAsJsonAsync($"https://patrikapiinl3.azurewebsites.net/workexperience", newWorkExperience);
                 if(response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("Sucess");
@@ -1012,7 +1012,7 @@
                 return;
             }
 
-            var response = await httpClient.DeleteAsync($"http://localhost:5177/workexperience/{selectedWorkExperienceToRemoveID}");
+            var response = await httpClient.DeleteAsync($"https://patrikapiinl3.azurewebsites.net/workexperience/{selectedWorkExperienceToRemoveID}");
             if (response.IsSuccessStatusCode)
             {
                 selectedWorkExperienceToRemoveID ="";
@@ -1029,7 +1029,7 @@
     {
         try
         {
-            var response = await httpClient.PutAsJsonAsync($"http://localhost:5177/workexperience/{selectedWorkExperienceToEditID}", workExperienceToEdit);
+            var response = await httpClient.PutAsJsonAsync($"https://patrikapiinl3.azurewebsites.net/workexperience/{selectedWorkExperienceToEditID}", workExperienceToEdit);
             if(response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Sucess");
@@ -1072,7 +1072,7 @@
     {
         try
         {
-            var response = await httpClient.GetAsync("http://localhost:5177/skills");
+            var response = await httpClient.GetAsync("https://patrikapiinl3.azurewebsites.net/skills");
             if(response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Sucess");
@@ -1092,7 +1092,7 @@
             if (newSkill != null)
             {
 
-                var response = await httpClient.PostAsJsonAsync($"http://localhost:5177/skills", newSkill);
+                var response = await httpClient.PostAsJsonAsync($"https://patrikapiinl3.azurewebsites.net/skills", newSkill);
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("Sucess");
@@ -1115,7 +1115,7 @@
                 Console.WriteLine("no skill selected");
                 return;
             }
-            var response = await httpClient.DeleteAsync($"http://localhost:5177/skills/{selectedSkillToRemoveId}");
+            var response = await httpClient.DeleteAsync($"https://patrikapiinl3.azurewebsites.net/skills/{selectedSkillToRemoveId}");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Sucess");
@@ -1132,7 +1132,7 @@
     {
         try
         {
-            var response = await httpClient.PutAsJsonAsync($"http://localhost:5177/skills/{selectedSkillToEditId}", SkillToEdit);
+            var response = await httpClient.PutAsJsonAsync($"https://patrikapiinl3.azurewebsites.net/skills/{selectedSkillToEditId}", SkillToEdit);
             if(response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Sucess");
@@ -1175,7 +1175,7 @@
     {
         try
         {
-            var response = await httpClient.GetAsync("http://localhost:5177/qualifications");
+            var response = await httpClient.GetAsync("https://patrikapiinl3.azurewebsites.net/qualifications");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Sucess");
@@ -1194,7 +1194,7 @@
         {
             if (newQualification != null)
             {
-                var response = await httpClient.PostAsJsonAsync("http://localhost:5177/qualifications", newQualification);
+                var response = await httpClient.PostAsJsonAsync("https://patrikapiinl3.azurewebsites.net/qualifications", newQualification);
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("sucess");
@@ -1217,7 +1217,7 @@
                 Console.WriteLine("No contact slected");
                 return;
             }
-            var response = await httpClient.DeleteAsync($"http://localhost:5177/qualifications/{selectedQualificationToRemoveID}");
+            var response = await httpClient.DeleteAsync($"https://patrikapiinl3.azurewebsites.net/qualifications/{selectedQualificationToRemoveID}");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine($"Sucess, education with ID: {selectedContactToRemoveID} has been removed");
@@ -1234,7 +1234,7 @@
     {
         try
         {
-            var response = await httpClient.PutAsJsonAsync($"http://localhost:5177/qualifications/{QualificationToEdit.Id}", QualificationToEdit);
+            var response = await httpClient.PutAsJsonAsync($"https://patrikapiinl3.azurewebsites.net/qualifications/{QualificationToEdit.Id}", QualificationToEdit);
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Sucess");
@@ -1278,7 +1278,7 @@
     {
         try
         {
-            var response = await httpClient.GetAsync("http://localhost:5177/education");
+            var response = await httpClient.GetAsync("https://patrikapiinl3.azurewebsites.net/education");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Sucess");
@@ -1298,7 +1298,7 @@
         {
             if (newEducation != null)
             {
-                var response = await httpClient.PostAsJsonAsync("http://localhost:5177/education", newEducation);
+                var response = await httpClient.PostAsJsonAsync("https://patrikapiinl3.azurewebsites.net/education", newEducation);
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("sucess");
@@ -1321,7 +1321,7 @@
                 Console.WriteLine("No contact selected");
                 return;
             }
-            var response = await httpClient.DeleteAsync($"http://localhost:5177/education/{SelectedEducationToRemoveID}");
+            var response = await httpClient.DeleteAsync($"https://patrikapiinl3.azurewebsites.net/education/{SelectedEducationToRemoveID}");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine($"sucess, education with ID: {SelectedEducationToRemoveID} has been removed");
@@ -1338,7 +1338,7 @@
     {
         try
         {
-            var response = await httpClient.PutAsJsonAsync($"http://localhost:5177/education/{EducationToEdit.Id}", EducationToEdit);
+            var response = await httpClient.PutAsJsonAsync($"https://patrikapiinl3.azurewebsites.net/education/{EducationToEdit.Id}", EducationToEdit);
             if (response.IsSuccessStatusCode) 
             {
                 Console.WriteLine("Sucess");
@@ -1385,7 +1385,7 @@
     {
         try
         {
-            var response = await httpClient.GetAsync("http://localhost:5177/contact");
+            var response = await httpClient.GetAsync("https://patrikapiinl3.azurewebsites.net/contact");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Success");
@@ -1405,7 +1405,7 @@
         {
             if (newContact != null)
             {
-                var response = await httpClient.PostAsJsonAsync("http://localhost:5177/contact", newContact);
+                var response = await httpClient.PostAsJsonAsync("https://patrikapiinl3.azurewebsites.net/contact", newContact);
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("Sucess");
@@ -1428,7 +1428,7 @@
                 Console.WriteLine("no contact selected");
                 return;
             }
-            var response = await httpClient.DeleteAsync($"http://localhost:5177/contact/{selectedContactToRemoveID}");
+            var response = await httpClient.DeleteAsync($"https://patrikapiinl3.azurewebsites.net/contact/{selectedContactToRemoveID}");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine($"Success item with ID: {selectedContactToRemoveID}");
@@ -1445,7 +1445,7 @@
     {
         try
         {
-            var response = await httpClient.PutAsJsonAsync($"http://localhost:5177/contact/{ContactToEdit.Id}", ContactToEdit);
+            var response = await httpClient.PutAsJsonAsync($"https://patrikapiinl3.azurewebsites.net/contact/{ContactToEdit.Id}", ContactToEdit);
             if (response.IsSuccessStatusCode) 
             {
                 Console.WriteLine("Sucess");
@@ -1493,7 +1493,7 @@
     {
         try
         {
-            var response = await httpClient.GetAsync("http://localhost:5177/about");
+            var response = await httpClient.GetAsync("https://patrikapiinl3.azurewebsites.net/about");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("sucess");
@@ -1517,7 +1517,7 @@
 
             if (AboutInfo.Name != null)
             {
-                var response = await httpClient.PostAsJsonAsync("http://localhost:5177/about", AboutInfo);
+                var response = await httpClient.PostAsJsonAsync("https://patrikapiinl3.azurewebsites.net/about", AboutInfo);
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("Success");
@@ -1550,7 +1550,7 @@
                 Console.WriteLine("No about selected");
                 return;
             }
-            var response = await httpClient.DeleteAsync($"http://localhost:5177/about/{selectedAboutIdToRemove}");
+            var response = await httpClient.DeleteAsync($"https://patrikapiinl3.azurewebsites.net/about/{selectedAboutIdToRemove}");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine($"Sucess item with ID:{selectedAboutId} was deleted");
@@ -1574,7 +1574,7 @@
     {
         try
         {
-            var response = await httpClient.PutAsJsonAsync($"http://localhost:5177/about/{EditAbout.Id}", EditAbout);
+            var response = await httpClient.PutAsJsonAsync($"https://patrikapiinl3.azurewebsites.net/about/{EditAbout.Id}", EditAbout);
 
 
             if (response.IsSuccessStatusCode)
@@ -1627,7 +1627,7 @@
         {
             try
             {
-                var response = await httpClient.GetAsync("http://localhost:5177/project");
+                var response = await httpClient.GetAsync("https://patrikapiinl3.azurewebsites.net/project");
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("sucess");
@@ -1651,7 +1651,7 @@
         {
             if (newProject.Name != null)
             {
-                var response = await httpClient.PostAsJsonAsync("http://localhost:5177/project", newProject);
+                var response = await httpClient.PostAsJsonAsync("https://patrikapiinl3.azurewebsites.net/project", newProject);
                 if (response.IsSuccessStatusCode)
                 {
                     Console.WriteLine("Success");
@@ -1682,7 +1682,7 @@
                 Console.WriteLine("No about selected");
                 return;
             }
-            var response = await httpClient.DeleteAsync($"http://localhost:5177/project/{selectedProjectToRemoveID}");
+            var response = await httpClient.DeleteAsync($"https://patrikapiinl3.azurewebsites.net/project/{selectedProjectToRemoveID}");
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine($"Sucess item with ID:{selectedProjectToRemoveID} was deleted");
@@ -1709,7 +1709,7 @@
     {
         try
         {
-            var response = await httpClient.PutAsJsonAsync($"http://localhost:5177/project/{ProjectToEdit.Id}", ProjectToEdit);
+            var response = await httpClient.PutAsJsonAsync($"https://patrikapiinl3.azurewebsites.net/project/{ProjectToEdit.Id}", ProjectToEdit);
             if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("Sucess");

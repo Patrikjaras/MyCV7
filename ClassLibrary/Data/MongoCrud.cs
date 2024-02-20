@@ -14,7 +14,7 @@ namespace ClassLibrary1.Data
 
 		public MongoCrud(string database)
 		{
-			var client = new MongoClient("mongodb://localhost:27017");
+			var client = new MongoClient("mongodb://patrikcv:Dg09CK1hm5t8zYHwKS7sGGl2wlST6PKJBSIjwQwSB1B3cggFjNGLNOrEIpnkeGT6O0otCFgwTOcJACDbYwEBzw==@patrikcv.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@patrikcv@");
 			db = client.GetDatabase(database);
 		}
 
