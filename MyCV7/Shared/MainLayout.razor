@@ -3,9 +3,14 @@
 <PageTitle>MyCV7</PageTitle>
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+    <AuthorizeView>
+        <Authorized>
+
+   @* <div class="sidebar">
+       <NavMenu />
+   </div> *@
+        </Authorized>
+    </AuthorizeView>
 
     <main>
         <div class="top-row px-4 auth">
@@ -18,3 +23,4 @@
         </article>
     </main>
 </div>
+ 

@@ -7,23 +7,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace ClassLibrary1.Models
+namespace ClassLibrary.Models
 {
-	public class Skills
-	{
-		[BsonId]
-		[BsonRepresentation(BsonType.ObjectId)]
+    public class Projects
+    {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
         public string Description { get; set; }
         [Required]
-        public string imagePath { get; set; }
+        public string Text { get; set; }
         [Required]
-        public int Years { get; set; }
-        [Required]
-        public int skillLevel { get; set; } 
-     
+        public string GitHubLink { get; set; }
     }
 }

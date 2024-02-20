@@ -1,5 +1,9 @@
+using ClassLibrary.Models;
 using ClassLibrary1.Data;
 using ClassLibrary1.Models;
+using MongoDB.Bson;
+using MongoDB.Driver;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,9 +20,11 @@ MongoCrud<Skills> SkillsDb = new MongoCrud<Skills>("TestTestTest");
 MongoCrud<Education> EducationDb = new MongoCrud<Education>("TestTestTest");
 MongoCrud<Qualifications> QualificationDb = new MongoCrud<Qualifications>("TestTestTest");
 MongoCrud<WorkExperience> WorkexperienceDb = new MongoCrud<WorkExperience>("TestTestTest");
+MongoCrud<Projects> ProjectsDB = new MongoCrud<Projects>("TestTestTest");
+
 //DBs-end--------------------------------------------------------------------------------------------------------
 
-
+builder.Services.AddCors();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -123,12 +129,14 @@ app.MapPost("/skills", async (Skills about) =>
     var asd = await SkillsDb.AddAsync("Skills", about);
     return Results.Ok(asd);
 });
+     
 
 app.MapGet("/skills", async () =>
 {
-    var asd = await SkillsDb.GetAsync("Skills");
-    return Results.Ok(asd);
+    var skill = await SkillsDb.GetAsync("Skills");
+    return Results.Ok(skill);
 });
+
 
 app.MapDelete("/skills/{id}", async (string id) =>
 {
@@ -278,6 +286,62 @@ app.MapPut("/education/{id}", async (string id, Education UpdatedObject) =>
     try
     {
         await EducationDb.Update("Education", UpdatedObject, id);
+        return Results.Ok($"Document with {id} has been updated");
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(id, ex.Message);
+    }
+
+});
+
+//Projects
+app.MapPost("/project", async (Projects project) =>
+{
+    try
+    {
+
+    var asd = await ProjectsDB.AddAsync("Projects", project);
+    return Results.Ok(asd);
+    }
+    catch(Exception ex)
+    {
+        return Results.Problem();
+    }
+});
+
+app.MapGet("/project", async () =>
+{
+    try
+    {
+
+    var response = await ProjectsDB.GetAsync("Projects");
+    return Results.Ok(response);
+
+    }
+    catch { return Results.Problem();}
+});
+
+app.MapDelete("/project/{id}", async (string id) =>
+{
+    try
+    {
+        await ProjectsDB.Delete<Projects>("Projects", id);
+        return Results.Ok($"project with ID: {id} has been deleted");
+
+    }
+    catch (Exception)
+    {
+        return Results.Problem("Something went wrong");
+    }
+
+});
+
+app.MapPut("/project/{id}", async (string id, Projects UpdatedObject) =>
+{
+    try
+    {
+        await ProjectsDB.Update("Projects", UpdatedObject, id);
         return Results.Ok($"Document with {id} has been updated");
     }
     catch (Exception ex)
